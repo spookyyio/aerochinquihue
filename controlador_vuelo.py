@@ -1,19 +1,27 @@
+# controlador_vuelo.py
 from vuelo import Vuelo
+from datos_vuelos import datos_vuelos
 
 class ControladorVuelo:
-    def _init_(self):
+    def __init__(self):
         self.vuelos = {}
 
-    def agregar_vuelo(self, numero_vuelo, origen, destino, fecha, hora_salida, duracion, asientos_disponibles):
-        vuelo = Vuelo(numero_vuelo, origen, destino, fecha, hora_salida, duracion, asientos_disponibles)
-        self.vuelos[numero_vuelo] = vuelo
+    def poblar_vuelos(self):
+        for datos in datos_vuelos:
+            vuelo = Vuelo(
+                datos["numero_vuelo"],
+                datos["origen"],
+                datos["destino"],
+                datos["fecha"],
+                datos["hora_salida"],
+                datos["duracion"],
+                datos["asientos_disponibles"],
+                datos["precio_pasaje"],
+                datos["precio_encomienda"]
+            )
+            self.vuelos[vuelo.numero_vuelo] = vuelo
 
-    def reservar_asiento(self, numero_vuelo, cantidad=1):
-        if numero_vuelo in self.vuelos:
-            return self.vuelos[numero_vuelo].reservar_asiento(cantidad)
-        return False
-
-    def mostrar_informacion_vuelo(self, numero_vuelo):
-        if numero_vuelo in self.vuelos:
-            return self.vuelos[numero_vuelo].mostrar_informacion()
-        return "Vuelo no encontrado."
+    def mostrar_vuelos(self):
+        for vuelo in self.vuelos.values():
+            print(vuelo.mostrar_informacion())
+            print("-" * 30)  # Separador entre vuelos
