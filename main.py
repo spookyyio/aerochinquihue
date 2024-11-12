@@ -1,3 +1,6 @@
+## Integrantes de el equipo Felipe Sanchez, Kassandra Fuentes
+
+
 class Vuelo:
     def __init__(self, id_vuelo, tipo_avion, destino, hora_salida, hora_llegada, precio, precioencomienda, cap_pasajeros, carga_maxima):
         self.id_vuelo = id_vuelo
