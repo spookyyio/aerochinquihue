@@ -4,7 +4,8 @@ from vista_agendar import VistaAgendar
 from vista_encomiendas import VistaEncomiendas
 from vista_vuelosact import VistaVuelosAct
 from vista_admin import VistaAdmin
-
+from controller_agendar import FlightSchedulerController
+from model_agendar import ModeloAgendarVuelo
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -28,6 +29,7 @@ class MainWindow(QMainWindow):
         main_layout.addWidget(self.button_widget, alignment=Qt.AlignmentFlag.AlignLeft)
         
         self.stacked_widget = QStackedWidget()
+        self.vuelos_act_view = VistaVuelosAct()
         pages = self.load_pages()
         for page in pages:
             self.stacked_widget.addWidget(page)
@@ -54,10 +56,12 @@ class MainWindow(QMainWindow):
 
     def load_pages(self):
         """Load all pages (views) into a list."""
+        model = ModeloAgendarVuelo()
+        controller = FlightSchedulerController(model)
         return [
-            VistaAgendar(),
+            VistaAgendar(controller, self.vuelos_act_view),
             VistaEncomiendas(),
-            VistaVuelosAct(),
+            self.vuelos_act_view,
             VistaAdmin(),
         ]
 
