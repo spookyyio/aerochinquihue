@@ -1,4 +1,3 @@
-# vista_admin.py
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QFormLayout, QComboBox, QMessageBox, QInputDialog
 from controller_agendar import FlightSchedulerController
 
