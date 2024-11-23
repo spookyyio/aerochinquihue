@@ -1,4 +1,3 @@
-# app.py
 from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QPushButton, QStackedWidget, QWidget, QHBoxLayout
 from PyQt6.QtCore import Qt
 from vista_agendar import VistaAgendar

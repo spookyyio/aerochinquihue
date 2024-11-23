@@ -1,4 +1,3 @@
-# controller_agendar.py
 from model_agendar import ModeloAgendarVuelo
 
 class FlightSchedulerController:

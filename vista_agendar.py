@@ -1,9 +1,8 @@
-# vista_agendar.py
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QFormLayout, QComboBox, QCheckBox, QDateEdit, QMessageBox
 from PyQt6.QtCore import pyqtSignal, QDate, Qt
 
 class VistaAgendar(QWidget):
-    reservation_made = pyqtSignal(list)  # Define a custom signal
+    reservation_made = pyqtSignal(list)
 
     def __init__(self, controller, vuelos_act_view):
         super().__init__()
@@ -23,13 +22,13 @@ class VistaAgendar(QWidget):
         self.destination_combo.currentIndexChanged.connect(self.update_max_cargo)
         
         self.client_name_input = QLineEdit()
-        self.package_checkbox = QCheckBox("Paquete?")
+        self.package_checkbox = QCheckBox("Paquete")
         self.package_checkbox.stateChanged.connect(self.toggle_package_fields)
         self.package_weight_input = QLineEdit()
         self.package_dimensions_input = QLineEdit()
         self.date_input = QDateEdit()
         self.date_input.setDate(QDate.currentDate())
-        self.max_cargo_label = QLabel("Carga Maxima:")
+        self.max_cargo_label = QLabel("Carga máxima: ")
         
         self.package_weight_input.setEnabled(False)
         self.package_dimensions_input.setEnabled(False)
@@ -44,14 +43,14 @@ class VistaAgendar(QWidget):
         
         layout.addLayout(form_layout)
         
-        schedule_button = QPushButton("Agendar Vuelo")
+        schedule_button = QPushButton("Agendar vuelo")
         schedule_button.clicked.connect(self.schedule_flight)
         layout.addWidget(schedule_button)
 
     def update_max_cargo(self):
         selected_destination = self.destination_combo.currentData()
         if selected_destination:
-            self.max_cargo_label.setText(f"Max Cargo: {selected_destination[4]} kg")
+            self.max_cargo_label.setText(f"Carga máxima: {selected_destination[4]} kg")
 
     def toggle_package_fields(self, state):
         if state == 2:
@@ -71,26 +70,26 @@ class VistaAgendar(QWidget):
             current_cargo, current_passengers = self.controller.get_current_bookings(selected_destination[0], date)
             
             if current_passengers >= max_passengers:
-                QMessageBox.warning(self, "Error", "El vuelo ya está lleno.")
+                QMessageBox.warning(self, "Error", "El vuelo ya ha alcanzado el número máximo de pasajeros.")
                 return
 
             if current_cargo + package_weight > max_cargo:
-                QMessageBox.warning(self, "Error", "El paquete excede la capacidad de carga máxima del avión.")
+                QMessageBox.warning(self, "Error", "El peso del paquete excede la capacidad máxima de carga del avión.")
                 return
 
             flight_data = [
-                selected_destination[0],  
-                selected_destination[1],  
-                selected_destination[2],  
-                selected_destination[3],  
-                selected_destination[4],  
-                selected_destination[5],  
-                self.client_name_input.text(),  
-                self.package_checkbox.isChecked(),  
+                selected_destination[0],
+                selected_destination[1],
+                selected_destination[2],
+                selected_destination[3],
+                selected_destination[4],
+                selected_destination[5],
+                self.client_name_input.text(),
+                self.package_checkbox.isChecked(),
                 self.package_weight_input.text(),
-                self.package_dimensions_input.text(),  
-                date  # Date
+                self.package_dimensions_input.text(),
+                date
             ]
             self.controller.schedule_flight(flight_data)
             self.vuelos_act_view.refresh_view()
-            self.reservation_made.emit(flight_data) 
+            self.reservation_made.emit(flight_data)

@@ -1,4 +1,3 @@
-# vista_encomiendas.py
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QFormLayout, QComboBox, QMessageBox
 from PyQt6.QtCore import QDate
 from controller_agendar import FlightSchedulerController
@@ -27,10 +26,10 @@ class VistaEncomiendas(QWidget):
         self.current_date_input = QLineEdit()
         self.current_date_input.setText(QDate.currentDate().toString("yyyy-MM-dd"))
         self.current_date_input.setReadOnly(True)
-        self.max_cargo_label = QLabel("Carga Maxima: ")
+        self.max_cargo_label = QLabel("Carga máxima: ")
         
         form_layout.addRow("Destino:", self.destination_combo)
-        form_layout.addRow("Nombre del Cliente:", self.client_name_input)
+        form_layout.addRow("Nombre del cliente:", self.client_name_input)
         form_layout.addRow("Peso del paquete:", self.package_weight_input)
         form_layout.addRow("Dimensiones del paquete:", self.package_dimensions_input)
         form_layout.addRow("Fecha actual:", self.current_date_input)
@@ -38,14 +37,14 @@ class VistaEncomiendas(QWidget):
         
         layout.addLayout(form_layout)
         
-        create_package_button = QPushButton("Crear Encomienda")
+        create_package_button = QPushButton("Crear encomienda")
         create_package_button.clicked.connect(self.create_package)
         layout.addWidget(create_package_button)
 
     def update_max_cargo(self):
         selected_destination = self.destination_combo.currentData()
         if selected_destination:
-            self.max_cargo_label.setText(f"Carga Maxima: {selected_destination[4]} kg")
+            self.max_cargo_label.setText(f"Carga máxima: {selected_destination[4]} kg")
 
     def create_package(self):
         selected_destination = self.destination_combo.currentData()
@@ -56,15 +55,15 @@ class VistaEncomiendas(QWidget):
             current_cargo, _ = self.controller.get_current_bookings(selected_destination[0], date)
             
             if current_cargo + package_weight > max_cargo:
-                QMessageBox.warning(self, "Error", "El paquete excede la carga maxima.")
+                QMessageBox.warning(self, "Error", "El peso del paquete excede la capacidad máxima de carga del avión.")
                 return
 
             package_data = [
-                selected_destination[0],  
-                self.client_name_input.text(),  
-                self.package_weight_input.text(),  
-                self.package_dimensions_input.text(), 
-                date  
+                selected_destination[0],
+                self.client_name_input.text(),
+                self.package_weight_input.text(),
+                self.package_dimensions_input.text(),
+                date
             ]
             self.controller.save_package(package_data)
             self.vuelos_act_view.refresh_view()

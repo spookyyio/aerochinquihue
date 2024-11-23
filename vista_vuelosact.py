@@ -1,4 +1,3 @@
-# vista_vuelosact.py
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QGroupBox, QFormLayout, QScrollArea
 from controller_vuelosact import FlightVisualizer
 from model_vuelosact import FlightVisualizerModel
