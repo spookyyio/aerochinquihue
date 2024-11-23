@@ -1,10 +1,11 @@
+# vista_vuelosact.py
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QGroupBox, QFormLayout, QScrollArea
+from controller_vuelosact import FlightVisualizer
+from model_vuelosact import FlightVisualizerModel
 
 class VistaVuelosAct(QWidget):
     def __init__(self):
         super().__init__()
-        from controller_vuelosact import FlightVisualizer
-        from model_vuelosact import FlightVisualizerModel
         self.controller = FlightVisualizer(FlightVisualizerModel())
         self.init_ui()
 
@@ -26,7 +27,6 @@ class VistaVuelosAct(QWidget):
         self.refresh_view()
 
     def refresh_view(self):
-        # Clear existing flight boxes
         for i in reversed(range(self.scroll_layout.count())):
             widget = self.scroll_layout.itemAt(i).widget()
             if widget:

@@ -1,9 +1,11 @@
+# app.py
 from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QPushButton, QStackedWidget, QWidget, QHBoxLayout
 from PyQt6.QtCore import Qt
 from vista_agendar import VistaAgendar
 from vista_encomiendas import VistaEncomiendas
 from vista_vuelosact import VistaVuelosAct
 from vista_admin import VistaAdmin
+from vista_adminpackages import VistaAdminPackages
 from controller_agendar import FlightSchedulerController
 from model_agendar import ModeloAgendarVuelo
 
@@ -18,6 +20,7 @@ class MainWindow(QMainWindow):
             "ENCOMIENDAS": 1,
             "VUELOS ACTUALES": 2,
             "[ADMIN] ADMINISTRAR VUELOS": 3,
+            "[ADMIN] ADMINISTRAR PAQUETES": 4,
         }
 
         central_widget = QWidget()
@@ -25,7 +28,7 @@ class MainWindow(QMainWindow):
 
         main_layout = QHBoxLayout(central_widget)
 
-        self.button_widget = self.create_buttons()  # Store the button widget in an attribute
+        self.button_widget = self.create_buttons()
         main_layout.addWidget(self.button_widget, alignment=Qt.AlignmentFlag.AlignLeft)
         
         self.stacked_widget = QStackedWidget()
@@ -38,7 +41,6 @@ class MainWindow(QMainWindow):
         self.change_page(0)
 
     def create_buttons(self):
-        """Create the navigation buttons."""
         button_widget = QWidget()
         button_layout = QVBoxLayout(button_widget)
 
@@ -55,22 +57,29 @@ class MainWindow(QMainWindow):
         return button_widget
 
     def load_pages(self):
-        """Load all pages (views) into a list."""
         model = ModeloAgendarVuelo()
         controller = FlightSchedulerController(model)
+        vista_agendar = VistaAgendar(controller, self.vuelos_act_view)
+        vista_agendar.reservation_made.connect(self.handle_reservation_made)
+        vista_encomiendas = VistaEncomiendas(controller, self.vuelos_act_view)
+        vista_admin = VistaAdmin(controller, self.vuelos_act_view)
+        vista_adminpackages = VistaAdminPackages(controller, self.vuelos_act_view)
         return [
-            VistaAgendar(controller, self.vuelos_act_view),
-            VistaEncomiendas(),
+            vista_agendar,
+            vista_encomiendas,
             self.vuelos_act_view,
-            VistaAdmin(),
+            vista_admin,
+            vista_adminpackages,
         ]
 
     def change_page(self, index):
-        """Switch to the page at the given index."""
         self.stacked_widget.setCurrentIndex(index)
         for button in self.button_widget.findChildren(QPushButton):
             button.setStyleSheet("font-weight: normal;")
         self.button_widget.findChildren(QPushButton)[index].setStyleSheet("font-weight: bold;")
+
+    def handle_reservation_made(self, flight_data):
+        print("Nueva reserva realizada:", flight_data)
 
 if __name__ == "__main__":
     import sys
