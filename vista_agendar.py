@@ -1,5 +1,5 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QFormLayout, QComboBox, QCheckBox, QDateEdit, QMessageBox
-from PyQt6.QtCore import pyqtSignal, QDate, Qt
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QFormLayout, QComboBox, QLineEdit, QCheckBox, QDateEdit, QLabel, QPushButton, QMessageBox
+from PyQt6.QtCore import QDate, pyqtSignal
 
 class VistaAgendar(QWidget):
     reservation_made = pyqtSignal(list)
@@ -46,6 +46,8 @@ class VistaAgendar(QWidget):
         schedule_button = QPushButton("Agendar vuelo")
         schedule_button.clicked.connect(self.schedule_flight)
         layout.addWidget(schedule_button)
+        
+        self.setLayout(layout)
 
     def update_max_cargo(self):
         selected_destination = self.destination_combo.currentData()
@@ -77,6 +79,10 @@ class VistaAgendar(QWidget):
                 QMessageBox.warning(self, "Error", "El peso del paquete excede la capacidad máxima de carga del avión.")
                 return
 
+            base_price = float(selected_destination[6])
+            package_price = float(selected_destination[7]) if self.package_checkbox.isChecked() else 0
+            total_price = base_price + package_price
+
             flight_data = [
                 selected_destination[0],
                 selected_destination[1],
@@ -88,7 +94,8 @@ class VistaAgendar(QWidget):
                 self.package_checkbox.isChecked(),
                 self.package_weight_input.text(),
                 self.package_dimensions_input.text(),
-                date
+                date,
+                total_price  # Total price including package price if applicable
             ]
             self.controller.schedule_flight(flight_data)
             self.vuelos_act_view.refresh_view()

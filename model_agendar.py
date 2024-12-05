@@ -75,23 +75,6 @@ class ModeloAgendarVuelo:
             pass
         return flights
 
-    def remove_passenger(self, flight_data):
-        flights = []
-        try:
-            with open(self.flights_csv, mode='r') as file:
-                reader = csv.reader(file)
-                flights = list(reader)
-            with open(self.flights_csv, mode='w', newline='') as file:
-                writer = csv.writer(file)
-                for row in flights:
-                    if row != flight_data:
-                        writer.writerow(row)
-        except FileNotFoundError:
-            pass
-
-    def add_passenger(self, flight_data):
-        self.save_flight(flight_data)
-
     def get_current_bookings(self, destination, date):
         current_cargo = 0
         current_passengers = 0
@@ -141,3 +124,31 @@ class ModeloAgendarVuelo:
 
     def add_package(self, package_data):
         self.save_package(package_data)
+
+    def get_all_flights(self):
+        flights = []
+        try:
+            with open(self.flights_csv, mode='r') as file:
+                reader = csv.reader(file)
+                next(reader)  # Skip header
+                for row in reader:
+                    flights.append(row)
+        except StopIteration:
+            pass
+        except FileNotFoundError:
+            pass
+        return flights
+
+    def remove_flight(self, flight_data):
+        flights = []
+        try:
+            with open(self.flights_csv, mode='r') as file:
+                reader = csv.reader(file)
+                flights = list(reader)
+            with open(self.flights_csv, mode='w', newline='') as file:
+                writer = csv.writer(file)
+                for row in flights:
+                    if row != flight_data:
+                        writer.writerow(row)
+        except FileNotFoundError:
+            pass

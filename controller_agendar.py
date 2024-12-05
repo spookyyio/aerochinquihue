@@ -34,8 +34,8 @@ class FlightSchedulerController:
     def get_packages_by_destination(self, destination):
         return self.model.get_packages_by_destination(destination)
 
-    def remove_package(self, package_data):
-        self.model.remove_package(package_data)
+    def get_all_flights(self):
+        return self.model.get_all_flights()
 
-    def add_package(self, package_data):
-        self.model.add_package(package_data)
+    def remove_flight(self, flight_data):
+        self.model.remove_flight(flight_data)

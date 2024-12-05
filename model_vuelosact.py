@@ -1,4 +1,5 @@
 import csv
+import os
 
 class FlightVisualizerModel:
     def __init__(self, csv_file='vuelos.csv'):
@@ -6,8 +7,9 @@ class FlightVisualizerModel:
 
     def get_flights(self):
         flights = []
-        with open(self.csv_file, mode='r') as file:
-            reader = csv.reader(file)
-            for row in reader:
-                flights.append(row)
+        if os.path.exists(self.csv_file) and os.path.getsize(self.csv_file) > 0:
+            with open(self.csv_file, mode='r', newline='') as file:
+                reader = csv.reader(file)
+                for row in reader:
+                    flights.append(row)
         return flights

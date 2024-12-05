@@ -7,6 +7,7 @@ from vista_encomiendas import VistaEncomiendas
 from vista_vuelosact import VistaVuelosAct
 from vista_admin import VistaAdmin
 from vista_adminpackages import VistaAdminPackages
+from vista_adminvuelos import VistaAdminVuelos
 from controller_agendar import FlightSchedulerController
 from model_agendar import ModeloAgendarVuelo
 
@@ -20,8 +21,9 @@ class MainWindow(QMainWindow):
             "AGENDAR UN VUELO": 0,
             "ENCOMIENDAS": 1,
             "VUELOS ACTUALES": 2,
-            "[ADMIN] ADMINISTRAR VUELOS": 3,
+            "[ADMIN] ANADIR VUELOS": 3,
             "[ADMIN] ADMINISTRAR PAQUETES": 4,
+            "[ADMIN] GESTIONAR VUELOS": 5,
         }
 
         central_widget = QWidget()
@@ -48,13 +50,11 @@ class MainWindow(QMainWindow):
         button_widget.setStyleSheet("background-color: #d3d3d3; padding: 20px; border-radius: 10px;")
         button_layout.setSpacing(20) 
         button_layout.setContentsMargins(10, 10, 10, 10)  
-
         for text, index in self.navigation_buttons.items():
             button = QPushButton(text)
             button.setStyleSheet("border-radius: 10px; padding: 10px; font-size: 14px;")
             button.clicked.connect(lambda _, idx=index: self.change_page(idx))
             button_layout.addWidget(button)
-
         return button_widget
 
     def load_pages(self):
@@ -65,12 +65,14 @@ class MainWindow(QMainWindow):
         vista_encomiendas = VistaEncomiendas(controller, self.vuelos_act_view)
         vista_admin = VistaAdmin(controller, self.vuelos_act_view)
         vista_adminpackages = VistaAdminPackages(controller, self.vuelos_act_view)
+        vista_adminvuelos = VistaAdminVuelos(controller, self.vuelos_act_view)
         return [
             vista_agendar,
             vista_encomiendas,
             self.vuelos_act_view,
             vista_admin,
             vista_adminpackages,
+            vista_adminvuelos,
         ]
 
     def change_page(self, index):

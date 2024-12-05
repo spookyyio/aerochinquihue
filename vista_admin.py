@@ -1,5 +1,5 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QFormLayout, QComboBox, QMessageBox, QInputDialog
-from controller_agendar import FlightSchedulerController
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QFormLayout, QComboBox, QLineEdit, QCheckBox, QDateEdit, QLabel, QPushButton, QMessageBox, QInputDialog
+from PyQt6.QtCore import QDate
 
 class VistaAdmin(QWidget):
     def __init__(self, controller, vuelos_act_view):
@@ -10,88 +10,101 @@ class VistaAdmin(QWidget):
 
     def init_ui(self):
         layout = QVBoxLayout(self)
-        header_label = QLabel("Administrar vuelos")
-        header_label.setStyleSheet("font-size: 18px; font-weight: bold;")
-        description_label = QLabel("Página para administrar vuelos")
-        layout.addWidget(header_label)
-        layout.addWidget(description_label)
-
-        self.password_input, ok = QInputDialog.getText(self, 'Contraseña', 'Ingrese la contraseña:', QLineEdit.EchoMode.Password)
-        if not ok:
-            return
-
-        passwords = self.controller.get_passwords()
-        if self.password_input not in passwords.values():
-            QMessageBox.warning(self, "Error", "Contraseña incorrecta.")
-            return
-
-        self.role = [role for role, password in passwords.items() if password == self.password_input][0]
-
+        
+        form_layout = QFormLayout()
+        
         self.destination_combo = QComboBox()
         destinations = self.controller.get_destinations()
         for destination in destinations:
             self.destination_combo.addItem(destination[0], destination)
-        self.destination_combo.currentIndexChanged.connect(self.update_flights)
-
-        self.flights_combo = QComboBox()
-        self.flights_combo.currentIndexChanged.connect(self.show_flight_details)
-
-        layout.addWidget(QLabel("Seleccionar destino:"))
-        layout.addWidget(self.destination_combo)
-        layout.addWidget(QLabel("Seleccionar vuelo:"))
-        layout.addWidget(self.flights_combo)
-
-        self.flight_details_label = QLabel()
-        layout.addWidget(self.flight_details_label)
-
-        self.add_passenger_button = QPushButton("Agregar pasajero")
-        self.add_passenger_button.clicked.connect(self.add_passenger)
-        layout.addWidget(self.add_passenger_button)
-
-        self.remove_passenger_button = QPushButton("Eliminar pasajero")
-        self.remove_passenger_button.clicked.connect(self.remove_passenger)
-        layout.addWidget(self.remove_passenger_button)
-
+        self.destination_combo.currentIndexChanged.connect(self.update_max_cargo)
+        
+        self.client_name_input = QLineEdit()
+        self.package_checkbox = QCheckBox("Paquete")
+        self.package_checkbox.stateChanged.connect(self.toggle_package_fields)
+        self.package_weight_input = QLineEdit()
+        self.package_dimensions_input = QLineEdit()
+        self.date_input = QDateEdit()
+        self.date_input.setDate(QDate.currentDate())
+        self.max_cargo_label = QLabel("Carga máxima: ")
+        
+        self.package_weight_input.setEnabled(False)
+        self.package_dimensions_input.setEnabled(False)
+        
+        form_layout.addRow("Destino:", self.destination_combo)
+        form_layout.addRow("Nombre del cliente:", self.client_name_input)
+        form_layout.addRow("Paquete:", self.package_checkbox)
+        form_layout.addRow("Peso del paquete:", self.package_weight_input)
+        form_layout.addRow("Dimensiones del paquete:", self.package_dimensions_input)
+        form_layout.addRow("Fecha:", self.date_input)
+        form_layout.addRow(self.max_cargo_label)
+        
+        layout.addLayout(form_layout)
+        
+        discount_label = QLabel("Descuento:")
+        self.discount_combo = QComboBox()
+        self.discount_combo.addItem("Ninguno", 0)
+        self.discount_combo.addItem("10%", 0.10)
+        self.discount_combo.addItem("100%", 1.00)
+        form_layout.addRow(discount_label, self.discount_combo)
+        
+        add_passenger_button = QPushButton("Agregar pasajero")
+        add_passenger_button.clicked.connect(self.add_passenger)
+        layout.addWidget(add_passenger_button)
+        
         self.setLayout(layout)
 
-    def update_flights(self):
-        self.flights_combo.clear()
+    def update_max_cargo(self):
         selected_destination = self.destination_combo.currentData()
         if selected_destination:
-            flights = self.controller.get_flights_by_destination(selected_destination[0])
-            for flight in flights:
-                self.flights_combo.addItem(flight[10], flight)
+            self.max_cargo_label.setText(f"Carga máxima: {selected_destination[4]} kg")
 
-    def show_flight_details(self):
-        selected_flight = self.flights_combo.currentData()
-        if selected_flight:
-            details = f"Destino: {selected_flight[0]}\nAeronave: {selected_flight[1]}\nHora de salida: {selected_flight[2]}\nHora de llegada: {selected_flight[3]}\nCarga máxima: {selected_flight[4]} kg\nPasajeros máximos: {selected_flight[5]}\nNombre del cliente: {selected_flight[6]}\nPaquete: {selected_flight[7]}\nPeso del paquete: {selected_flight[8]}\nDimensiones del paquete: {selected_flight[9]}\nFecha: {selected_flight[10]}"
-            self.flight_details_label.setText(details)
+    def toggle_package_fields(self, state):
+        if state == 2:
+            self.package_weight_input.setEnabled(True)
+            self.package_dimensions_input.setEnabled(True)
+        else:
+            self.package_weight_input.setEnabled(False)
+            self.package_dimensions_input.setEnabled(False)
 
     def add_passenger(self):
-        if self.role != "BOSS":
-            QMessageBox.warning(self, "Error", "Solo el BOSS puede agregar un pasajero.")
-            return
+        selected_destination = self.destination_combo.currentData()
+        if selected_destination:
+            max_cargo = float(selected_destination[4])
+            max_passengers = int(selected_destination[5])
+            package_weight = float(self.package_weight_input.text()) if self.package_weight_input.text() else 0
+            date = self.date_input.date().toString("yyyy-MM-dd")
+            current_cargo, current_passengers = self.controller.get_current_bookings(selected_destination[0], date)
+            
+            if current_passengers >= max_passengers:
+                QMessageBox.warning(self, "Error", "El vuelo ya ha alcanzado el número máximo de pasajeros.")
+                return
 
-        passenger_name, ok = QInputDialog.getText(self, 'Agregar pasajero', 'Ingrese el nombre del pasajero:')
-        if not ok:
-            return
+            if current_cargo + package_weight > max_cargo:
+                QMessageBox.warning(self, "Error", "El peso del paquete excede la capacidad máxima de carga del avión.")
+                return
 
-        selected_flight = self.flights_combo.currentData()
-        if selected_flight:
-            flight_data = selected_flight.copy()
-            flight_data[6] = passenger_name  # Update client name
-            self.controller.add_passenger(flight_data)
-            self.update_flights()
+            base_price = float(selected_destination[6])
+            package_price = float(selected_destination[7]) if self.package_checkbox.isChecked() else 0
+            total_price = base_price + package_price
+
+            discount = self.discount_combo.currentData()
+            total_price -= total_price * discount
+
+            flight_data = [
+                selected_destination[0],
+                selected_destination[1],
+                selected_destination[2],
+                selected_destination[3],
+                selected_destination[4],
+                selected_destination[5],
+                self.client_name_input.text(),
+                self.package_checkbox.isChecked(),
+                self.package_weight_input.text(),
+                self.package_dimensions_input.text(),
+                date,
+                total_price  # Total price including package price and discount if applicable
+            ]
+            self.controller.schedule_flight(flight_data)
             self.vuelos_act_view.refresh_view()
-
-    def remove_passenger(self):
-        if self.role != "BOSS":
-            QMessageBox.warning(self, "Error", "Solo el BOSS puede eliminar un pasajero.")
-            return
-
-        selected_flight = self.flights_combo.currentData()
-        if selected_flight:
-            self.controller.remove_passenger(selected_flight)
-            self.update_flights()
-            self.vuelos_act_view.refresh_view()
+            QMessageBox.information(self, "Éxito", "Pasajero agregado exitosamente.")

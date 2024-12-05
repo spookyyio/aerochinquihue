@@ -1,6 +1,6 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QFormLayout, QComboBox, QMessageBox
+# vista_encomiendas.py
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QFormLayout, QComboBox, QLineEdit, QPushButton, QLabel, QMessageBox
 from PyQt6.QtCore import QDate
-from controller_agendar import FlightSchedulerController
 
 class VistaEncomiendas(QWidget):
     def __init__(self, controller, vuelos_act_view):
@@ -40,6 +40,8 @@ class VistaEncomiendas(QWidget):
         create_package_button = QPushButton("Crear encomienda")
         create_package_button.clicked.connect(self.create_package)
         layout.addWidget(create_package_button)
+        
+        self.setLayout(layout)
 
     def update_max_cargo(self):
         selected_destination = self.destination_combo.currentData()
@@ -63,7 +65,8 @@ class VistaEncomiendas(QWidget):
                 self.client_name_input.text(),
                 self.package_weight_input.text(),
                 self.package_dimensions_input.text(),
-                date
+                date,
+                selected_destination[7]  # Package price
             ]
             self.controller.save_package(package_data)
             self.vuelos_act_view.refresh_view()

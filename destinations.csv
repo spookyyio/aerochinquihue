@@ -1,14 +1,14 @@
-Destination,Aircraft,Departure Time,Landing Time,Max Cargo,Max Passengers,Per Person Price
-Cochamo,Cessna 310,08:00,10:00,910,5,20000
-Puelo Bajo,Cessna 310,09:00,11:00,910,5,20000
-Contao,Cessna 208 Caravan,10:00,12:00,1315,9,20000
-Rio Negro,Cessna 208 Caravan,11:00,13:00,1315,9,25000
-Pupelde,Cessna 208 Caravan,12:00,14:00,1315,9,25000
-Chepu,Cessna 208 Caravan,13:00,15:00,1315,9,30000
-Ayacara,Cessna 208 Caravan,14:00,16:00,1315,9,30000
-Pillan,Cessna 310,15:00,17:00,910,5,40000
-Renihue,Cessna 208 Caravan,16:00,18:00,1315,9,40000
-Isla Quenac,LET 410 UVP-E20 ,17:00,19:00,1800,19,40000
-Palqui,LET 410 UVP-E20 ,18:00,20:00,1800,19,40000
-Chaiten,LET 410 UVP-E20 ,19:00,21:00,1800,19,50000
-Santa Barbara,LET 410 UVP-E20 ,20:00,22:00,1800,19,50000
+Destination,Aircraft,Departure Time,Landing Time,Max Cargo,Max Passengers,Per Person Price,Per Package Price
+Cochamo,Cessna 310,08:00,10:00,910,5,20000,5000
+Puelo Bajo,Cessna 310,09:00,11:00,910,5,20000,5000
+Contao,Cessna 208 Caravan,10:00,12:00,1315,9,20000,5000
+Rio Negro,Cessna 208 Caravan,11:00,13:00,1315,9,25000,6000
+Pupelde,Cessna 208 Caravan,12:00,14:00,1315,9,25000,6000
+Chepu,Cessna 208 Caravan,13:00,15:00,1315,9,30000,8000
+Ayacara,Cessna 208 Caravan,14:00,16:00,1315,9,30000,8000
+Pillan,Cessna 310,15:00,17:00,910,5,40000,12000
+Renihue,Cessna 208 Caravan,16:00,18:00,1315,9,40000,12000
+Isla Quenac,LET 410 UVP-E20,17:00,19:00,1800,19,40000,12000
+Palqui,LET 410 UVP-E20,18:00,20:00,1800,19,40000,12000
+Chaiten,LET 410 UVP-E20,19:00,21:00,1800,19,50000,15000
+Santa Barbara,LET 410 UVP-E20,20:00,22:00,1800,19,50000,15000
