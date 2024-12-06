@@ -47,7 +47,7 @@ class MainWindow(QMainWindow):
         button_widget = QWidget()
         button_layout = QVBoxLayout(button_widget)
 
-        button_widget.setStyleSheet("background-color: #d3d3d3; padding: 20px; border-radius: 10px;")
+        button_widget.setStyleSheet("background-color: #423a3a; padding: 20px; border-radius: 10px;")
         button_layout.setSpacing(20) 
         button_layout.setContentsMargins(10, 10, 10, 10)  
         for text, index in self.navigation_buttons.items():

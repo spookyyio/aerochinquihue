@@ -38,7 +38,7 @@ class VistaVuelosAct(QWidget):
                 flight_layout.addRow("Destination:", QLabel(flight[1]))
                 flight_layout.addRow("Departure Time:", QLabel(flight[2]))
                 flight_layout.addRow("Arrival Time:", QLabel(flight[3]))
-                flight_layout.addRow("Price:", QLabel(flight[4]))
+                flight_layout.addRow("Max Weight:", QLabel(flight[4]))
                 flight_layout.addRow("Seats:", QLabel(flight[5]))
                 flight_layout.addRow("Passenger:", QLabel(flight[6]))
                 flight_layout.addRow("Confirmed:", QLabel(flight[7]))
