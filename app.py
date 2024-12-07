@@ -12,11 +12,13 @@ from controller_agendar import FlightSchedulerController
 from model_agendar import ModeloAgendarVuelo
 
 class MainWindow(QMainWindow):
+    #Ventana principal de la aplicación, contiene los botones y las vistas
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Aero Chinquihue")
         self.setGeometry(100, 100, 1000, 600)
 
+        # diccionario para los botones
         self.navigation_buttons = {
             "AGENDAR UN VUELO": 0,
             "ENCOMIENDAS": 1,
@@ -26,14 +28,17 @@ class MainWindow(QMainWindow):
             "[ADMIN] GESTIONAR VUELOS": 5,
         }
 
+        # se pone el widget central
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
 
         main_layout = QHBoxLayout(central_widget)
 
+        #se crean los botones principales
         self.button_widget = self.create_buttons()
         main_layout.addWidget(self.button_widget, alignment=Qt.AlignmentFlag.AlignLeft)
         
+        # se usa stacked widget para soportar diferentes ventanas
         self.stacked_widget = QStackedWidget()
         self.vuelos_act_view = VistaVuelosAct()
         pages = self.load_pages()
@@ -41,9 +46,12 @@ class MainWindow(QMainWindow):
             self.stacked_widget.addWidget(page)
         main_layout.addWidget(self.stacked_widget)
         
+        # se muestra la primera página
         self.change_page(0)
 
     def create_buttons(self):
+
+        #se crean botones para cambiar a las diferentes vistas
         button_widget = QWidget()
         button_layout = QVBoxLayout(button_widget)
 
@@ -58,6 +66,8 @@ class MainWindow(QMainWindow):
         return button_widget
 
     def load_pages(self):
+
+        # se cargan las vistas en el qstacedwidget
         model = ModeloAgendarVuelo()
         controller = FlightSchedulerController(model)
         vista_agendar = VistaAgendar(controller, self.vuelos_act_view)
@@ -76,10 +86,13 @@ class MainWindow(QMainWindow):
         ]
 
     def change_page(self, index):
-        self.stacked_widget.setCurrentIndex(index)
-        for button in self.button_widget.findChildren(QPushButton):
+
+        #se cambia la pagina actual en el widget
+
+        self.stacked_widget.setCurrentIndex(index)  # toma un index para cambiar la pagina
+        for button in self.button_widget.findChildren(QPushButton): #itera sobre los botones y pone sus fuentes normales
             button.setStyleSheet("font-weight: normal;")
-        self.button_widget.findChildren(QPushButton)[index].setStyleSheet("font-weight: bold;")
+        self.button_widget.findChildren(QPushButton)[index].setStyleSheet("font-weight: bold;") # se pone en negrita el boton seleccionado
 
     def handle_reservation_made(self, flight_data):
         print("Nueva reserva realizada:", flight_data)
@@ -87,6 +100,7 @@ class MainWindow(QMainWindow):
 if __name__ == "__main__":
     import sys
 
+    #crear la aplicacion principal de el programa
     app = QApplication(sys.argv)
     window = MainWindow()
     window.show()

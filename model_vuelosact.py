@@ -7,9 +7,9 @@ class FlightVisualizerModel:
 
     def get_flights(self):
         flights = []
-        if os.path.exists(self.csv_file) and os.path.getsize(self.csv_file) > 0:
-            with open(self.csv_file, mode='r', newline='') as file:
-                reader = csv.reader(file)
-                for row in reader:
-                    flights.append(row)
-        return flights
+        if os.path.exists(self.csv_file) and os.path.getsize(self.csv_file) > 0:    # revisar si el archivo existe y no esta vacio
+            with open(self.csv_file, mode='r', newline='') as file:    # abrir el archivo en modo lectura
+                reader = csv.reader(file)   # leer el archivo
+                for row in reader:  # recorrer el archivo
+                    flights.append(row) # agregar los datos a la lista
+        return flights  # retornar la lista

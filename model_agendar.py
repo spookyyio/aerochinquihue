@@ -64,11 +64,11 @@ class ModeloAgendarVuelo:
         try:
             with open(self.flights_csv, mode='r') as file:
                 reader = csv.reader(file)
-                next(reader)  # Skip header
+                next(reader)  # skip header
                 for row in reader:
                     if row[0] == destination:
                         flights.append(row)
-            flights.sort(key=lambda x: x[10])  # Sort by date
+            flights.sort(key=lambda x: x[10])  # arreglar por fecha
         except StopIteration:
             pass
         except FileNotFoundError:
@@ -81,27 +81,27 @@ class ModeloAgendarVuelo:
         try:
             with open(self.flights_csv, mode='r') as file:
                 reader = csv.reader(file)
-                next(reader)  # Skip header
+                next(reader)  # skip
                 for row in reader:
-                    if row[0] == destination and row[10] == date:
-                        current_passengers += 1
-                        if row[7] == 'True':  # Package checkbox is checked
-                            current_cargo += float(row[8])
-        except StopIteration:
-            pass
-        except FileNotFoundError:
-            pass
-        return current_cargo, current_passengers
+                    if row[0] == destination and row[10] == date: # si es el destino y la fecha
+                        current_passengers += 1 # sumar un pasajero
+                        if row[7] == 'True':  # si tiene paquete
+                            current_cargo += float(row[8]) # sumar el peso del paquete
+        except StopIteration:   # si no hay nada
+            pass    # no hacer nada
+        except FileNotFoundError: # si no se encuentra el archivo
+            pass    # no hacer nada
+        return current_cargo, current_passengers # retornar el peso y la cantidad de pasajeros
 
     def get_packages_by_destination(self, destination):
         packages = []
         try:
             with open(self.packages_csv, mode='r') as file:
                 reader = csv.reader(file)
-                next(reader)  # Skip header
+                next(reader)  # skip header
                 for row in reader:
-                    if row[0] == destination:
-                        packages.append(row)
+                    if row[0] == destination:   # si el destino es el mismo
+                        packages.append(row) # agregar el paquete
         except StopIteration:
             pass
         except FileNotFoundError:
@@ -123,14 +123,14 @@ class ModeloAgendarVuelo:
             pass
 
     def add_package(self, package_data):
-        self.save_package(package_data)
+        self.save_package(package_data) # guardar el paquete
 
     def get_all_flights(self):
         flights = []
         try:
             with open(self.flights_csv, mode='r') as file:
                 reader = csv.reader(file)
-                next(reader)  # Skip header
+                next(reader)  # skip header
                 for row in reader:
                     flights.append(row)
         except StopIteration:

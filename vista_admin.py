@@ -57,17 +57,17 @@ class VistaAdmin(QWidget):
     def update_max_cargo(self):
         selected_destination = self.destination_combo.currentData()
         if selected_destination:
-            self.max_cargo_label.setText(f"Carga máxima: {selected_destination[4]} kg")
+            self.max_cargo_label.setText(f"Carga máxima: {selected_destination[4]} kg") # actualizar la carga maxima de la pagina
 
     def toggle_package_fields(self, state):
-        if state == 2:
-            self.package_weight_input.setEnabled(True)
-            self.package_dimensions_input.setEnabled(True)
+        if state == 2:          # si esta seleccionado el checkbox del paquete
+            self.package_weight_input.setEnabled(True) # habilitar el peso del paquete
+            self.package_dimensions_input.setEnabled(True) # habilitar las dimensiones del paquete
         else:
-            self.package_weight_input.setEnabled(False)
-            self.package_dimensions_input.setEnabled(False)
+            self.package_weight_input.setEnabled(False)     # deshabilitar el peso del paquete
+            self.package_dimensions_input.setEnabled(False)     # deshabilitar las dimensiones del paquete
 
-    def add_passenger(self):
+    def add_passenger(self): # lo mismo que vista_agendar
         selected_destination = self.destination_combo.currentData()
         if selected_destination:
             max_cargo = float(selected_destination[4])
@@ -103,7 +103,7 @@ class VistaAdmin(QWidget):
                 self.package_weight_input.text(),
                 self.package_dimensions_input.text(),
                 date,
-                total_price  # Total price including package price and discount if applicable
+                total_price  # precio total incluyendo paquete y descuento si aplicado
             ]
             self.controller.schedule_flight(flight_data)
             self.vuelos_act_view.refresh_view()
