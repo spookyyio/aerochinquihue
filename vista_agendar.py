@@ -19,7 +19,7 @@ class VistaAgendar(QWidget):
         destinations = self.controller.get_destinations()
         for destination in destinations:
             self.destination_combo.addItem(destination[0], destination)
-        self.destination_combo.currentIndexChanged.connect(self.update_max_cargo)
+        self.destination_combo.currentIndexChanged.connect(self.update_max_cargo) # actualiza la cantidad de peso segun el viaje seleccionado en la lista
         
         self.client_name_input = QLineEdit()
         self.package_checkbox = QCheckBox("Paquete")
@@ -95,8 +95,8 @@ class VistaAgendar(QWidget):
                 self.package_weight_input.text(),
                 self.package_dimensions_input.text(),
                 date,
-                total_price  # Total price including package price if applicable
+                total_price  # precio total incluyendo el precio del paquete
             ]
-            self.controller.schedule_flight(flight_data)
-            self.vuelos_act_view.refresh_view()
-            self.reservation_made.emit(flight_data)
+            self.controller.schedule_flight(flight_data) # llama al controlador y entrega los datos
+            self.vuelos_act_view.refresh_view() # refresca la vista de vuelos actuales
+            self.reservation_made.emit(flight_data) # emite la señal de que se ha hecho una reserva
