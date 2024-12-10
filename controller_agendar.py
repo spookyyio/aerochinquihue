@@ -1,4 +1,5 @@
 from model_agendar import ModeloAgendarVuelo
+import csv
 
 class FlightSchedulerController:
     def __init__(self, model):
@@ -22,8 +23,15 @@ class FlightSchedulerController:
     def get_flights_by_destination(self, destination):
         return self.model.get_flights_by_destination(destination)
 
-    def remove_passenger(self, flight_data):
-        self.model.remove_passenger(flight_data)
+    def remove_package(self, package_data):
+        packages = []
+        with open('packages.csv', 'r', newline='') as file:
+            reader = csv.reader(file)
+            packages = [row for row in reader if row != package_data]
+
+        with open('packages.csv', 'w', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerows(packages)
 
     def add_passenger(self, flight_data):
         self.model.add_passenger(flight_data)

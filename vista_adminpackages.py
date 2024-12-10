@@ -57,34 +57,34 @@ class VistaAdminPackages(QWidget):
 
     def update_packages(self):
         self.packages_combo.clear()
-        selected_destination = self.destination_combo.currentData() # obtener el destino seleccionado
+        selected_destination = self.destination_combo.currentData()
         if selected_destination:
-            packages = self.controller.get_packages_by_destination(selected_destination[0]) # obtener los paquetes por destino
-            for package in packages:    # recorrer los paquetes
-                self.packages_combo.addItem(package[2], package) # agregar los paquetes al combobox
+            packages = self.controller.get_packages_by_destination(selected_destination[0])
+            for package in packages:
+                self.packages_combo.addItem(package[2], package)
 
     def show_package_details(self):
-        selected_package = self.packages_combo.currentData()    # obtener el paquete seleccionado
+        selected_package = self.packages_combo.currentData()
         if selected_package:
-            details = f"Destino: {selected_package[0]}\nNombre del cliente: {selected_package[1]}\nPeso del paquete: {selected_package[2]}\nDimensiones del paquete: {selected_package[3]}\nFecha: {selected_package[4]}"   # mostrar los detalles del paquete
+            details = f"Destino: {selected_package[0]}\nNombre del cliente: {selected_package[1]}\nPeso del paquete: {selected_package[2]}\nDimensiones del paquete: {selected_package[3]}\nFecha: {selected_package[4]}"
             self.package_details_label.setText(details)
 
     def add_package(self):
-        if self.role != "BOSS": # si no es el jefe
-            QMessageBox.warning(self, "Error", "Solo el BOSS puede agregar un paquete.")    # mostrar mensaje de error
+        if self.role != "BOSS":
+            QMessageBox.warning(self, "Error", "Solo el BOSS puede agregar un paquete.")
             return
 
-        package_name, ok = QInputDialog.getText(self, 'Agregar paquete', 'Ingrese el nombre del paquete:')  # pedir el nombre del paquete
-        if not ok:  # si no se ingresa nada
-            return  # no hacer nada
+        package_name, ok = QInputDialog.getText(self, 'Agregar paquete', 'Ingrese el nombre del paquete:')
+        if not ok:
+            return
 
-        selected_package = self.packages_combo.currentData()    # obtener el paquete seleccionado
-        if selected_package:    # si hay un paquete seleccionado
-            package_data = selected_package.copy()  # copiar el paquete seleccionado
-            package_data[1] = package_name  # cambiar el nombre del paquete
-            self.controller.add_package(package_data) # agregar el paquete
-            self.update_packages()  # actualizar los paquetes
-            self.vuelos_act_view.refresh_view() # refrescar la vista de vuelos
+        selected_package = self.packages_combo.currentData()
+        if selected_package:
+            package_data = selected_package.copy()
+            package_data[1] = package_name
+            self.controller.add_package(package_data)
+            self.update_packages()
+            self.vuelos_act_view.refresh_view()
 
     def remove_package(self):
         if self.role != "BOSS":
@@ -93,6 +93,6 @@ class VistaAdminPackages(QWidget):
 
         selected_package = self.packages_combo.currentData()
         if selected_package:
-            self.controller.remove_package(selected_package)    # eliminar el paquete
-            self.update_packages()  # actualizar los paquetes
-            self.vuelos_act_view.refresh_view() # refrescar la vista de vuelos
+            self.controller.remove_package(selected_package)
+            self.update_packages()
+            self.vuelos_act_view.refresh_view()
