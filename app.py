@@ -17,7 +17,6 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.setWindowTitle("Aero Chinquihue")
         self.setGeometry(100, 100, 1000, 600)
-
         # diccionario para los botones
         self.navigation_buttons = {
             "AGENDAR UN VUELO": 0,
